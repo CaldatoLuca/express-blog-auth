@@ -1,6 +1,7 @@
 //imports
 const jwt = require("jsonwebtoken"); //jwt
 require("dotenv").config(); //dotenv
+const users = require("../db/users.json"); //users db
 
 /**
  * Raccogli lo user che fa login e crea un token personale
@@ -25,6 +26,27 @@ const generateToken = (user) => {
   return token;
 };
 
+const login = (req, res) => {
+  //ricevo dal form le info dello user
+  const { username, password } = req.body;
+
+  //trovo nel mio db degli users quello che si st loggando (è gia registrato a sistema)
+  const user = users.find(
+    (u) => u.username === username && u.password === password
+  );
+
+  //controllo se esiste
+  if (user) {
+    //genero il token
+    const token = generateToken(user);
+    //invio il token al client
+    res.status(200).json({ token });
+  } else {
+    res.status(404).json({ message: "Credenziali non valide" });
+  }
+};
+
 module.exports = {
   generateToken,
+  login,
 };

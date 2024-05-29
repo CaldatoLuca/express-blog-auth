@@ -1,34 +1,28 @@
 //CREAZIONE APP
 const express = require("express");
 const app = express();
-
-//Importo il router
-const postRouter = require("./routers/postRouter");
 const morgan = require("morgan");
 
-//Importo middlaware
-const notFound = require("./middlewares/notFound");
-const checkErrors = require("./middlewares/checkErrors");
+//Routers
+const postRouter = require("./routers/postRouter");
+const authRouter = require("./routers/authRouter");
 
 //MIDDLEWARES
-//visualizzazione file statici - img
-app.use(express.static("public"));
+const notFound = require("./middlewares/notFound"); //pagina non trovata
+const checkErrors = require("./middlewares/checkErrors"); //errori
+app.use(express.static("public")); //visualizzazione file statici - img
+app.use(morgan("dev")); //logger richieste
 
-app.use(morgan("dev"));
-
-//app.use(express.json()); //json
-
-//Rotta HOME
+//ROTTE
 app.get("/", (req, res) => {
   res.send("<h1>Benvenuti nel mio blog</h1> <a href='/posts'>Lista Posts</a>");
-});
+}); //home page
 
-//Rotte POSTS
-app.use("/posts", postRouter);
+app.use("/posts", postRouter); //posts
+app.use("/login", authRouter); //login
 
-//essendo alla fine delle rotte intervine
+//MIDDLEWARES
 app.use(notFound);
-//controllo errori finali
 app.use(checkErrors);
 
 //listen
