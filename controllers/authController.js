@@ -19,7 +19,7 @@ const generateToken = (user) => {
   //creo il token con
   //payload + password(del mio server) + scadenza
   const token = jwt.sign(payload, process.env.JWT_PASSWORD, {
-    expiresIn: "10s",
+    expiresIn: "1h",
   });
 
   //NB: si puo ridurre ma per capire lascio cosi

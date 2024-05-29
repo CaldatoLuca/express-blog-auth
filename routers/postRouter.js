@@ -10,6 +10,7 @@ const postController = require("../controllers/postController");
 const checkPostExist = require("../middlewares/checkPostExist");
 const uploader = multer({ dest: "public/imgs/posts" });
 const { authenticateJWT } = require("../controllers/authController");
+const isAdmin = require("../middlewares/isAdmin");
 router.use(express.urlencoded({ extended: true })); //x-www-urlencoded - lascia true(analizza anche aray e oggetti)
 //app.use(express.json()); //json
 
@@ -32,6 +33,7 @@ router.get("/:slug", checkPostExist, postController.show);
 router.delete(
   "/:slug",
   authenticateJWT,
+  isAdmin,
   checkPostExist,
   postController.destroy
 );
