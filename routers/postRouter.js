@@ -28,8 +28,13 @@ router.post(
 //Dettaglio post con metodo show
 router.get("/:slug", checkPostExist, postController.show);
 
-//Dettaglio post con metodo show
-router.delete("/:slug", checkPostExist, postController.destroy);
+//Cancellazione di post con metodo destroy
+router.delete(
+  "/:slug",
+  authenticateJWT,
+  checkPostExist,
+  postController.destroy
+);
 
 //Download con metodo download
 router.get("/:slug/download", postController.download);

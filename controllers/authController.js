@@ -19,7 +19,7 @@ const generateToken = (user) => {
   //creo il token con
   //payload + password(del mio server) + scadenza
   const token = jwt.sign(payload, process.env.JWT_PASSWORD, {
-    expiresIn: "1h",
+    expiresIn: "10s",
   });
 
   //NB: si puo ridurre ma per capire lascio cosi
@@ -38,10 +38,18 @@ const authenticateJWT = (req, res, next) => {
   //il token ha di default Bearer prima del token con poi spazio
   const token = authorization.split(" ")[1];
 
+  //mappatura errori per errori custom
+  const errorMessages = {
+    TokenExpiredError: "Il token è scaduto",
+    JsonWebTokenError: "Token non valido",
+  };
+
   //verifico che il token sia valido
   jwt.verify(token, process.env.JWT_PASSWORD, (err, user) => {
     if (err) {
-      return res.status(401).send(err);
+      const errorMessage =
+        errorMessages[err.name] || "Errore di autenticazione";
+      return res.status(401).send(errorMessage);
     }
 
     req.user = user;
