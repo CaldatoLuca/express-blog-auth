@@ -26,6 +26,31 @@ const generateToken = (user) => {
   return token;
 };
 
+const authenticateJWT = (req, res, next) => {
+  const { authorization } = req.headers;
+  //controllo se nell' header c'è il token, chiave authorization
+  if (!authorization) {
+    return res.status(401).send("Non sei autenticato");
+  }
+
+  //prendo il token
+  //splitto e prendo il secondo elemento
+  //il token ha di default Bearer prima del token con poi spazio
+  const token = authorization.split(" ")[1];
+
+  //verifico che il token sia valido
+  jwt.verify(token, process.env.JWT_PASSWORD, (err, user) => {
+    if (err) {
+      return res.status(401).send(err);
+    }
+
+    req.user = user;
+    //se tutto va bene, next()
+    next();
+  });
+};
+
+//risposta a rotta /login
 const login = (req, res) => {
   //ricevo dal form le info dello user
   const { username, password } = req.body;
@@ -49,4 +74,5 @@ const login = (req, res) => {
 module.exports = {
   generateToken,
   login,
+  authenticateJWT,
 };
