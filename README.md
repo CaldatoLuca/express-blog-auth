@@ -8,3 +8,4 @@ Limitare l' accesso alla rotta **/posts** POST (store) solo agli utenti loggati
 ### Bonus
 
 Ritornare errori diversi in caso il JWT sia errato o scaduto
+Creare middleware per proteggere le rotte riservate agli utenti admin
