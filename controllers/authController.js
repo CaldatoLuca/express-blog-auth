@@ -45,14 +45,14 @@ const authenticateJWT = (req, res, next) => {
   };
 
   //verifico che il token sia valido
-  jwt.verify(token, process.env.JWT_PASSWORD, (err, user) => {
+  jwt.verify(token, process.env.JWT_PASSWORD, (err, payload) => {
     if (err) {
       const errorMessage =
         errorMessages[err.name] || "Errore di autenticazione";
       return res.status(401).send(errorMessage);
     }
 
-    req.user = user;
+    req.user = payload;
     //se tutto va bene, next()
     next();
   });
@@ -75,7 +75,7 @@ const login = (req, res) => {
     //invio il token al client
     res.status(200).json({ token });
   } else {
-    res.status(404).json({ message: "Credenziali non valide" });
+    res.status(404).json({ error: "Credenziali non valide" });
   }
 };
 
